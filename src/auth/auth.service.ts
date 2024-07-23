@@ -29,13 +29,17 @@ export class AuthService {
     }
   }
 
-  async login(user: Partial<User>): Promise<LoginResponse> {
-    const payload = { username: user?.username, sub: user?.id };
+  async loginUser(user: Partial<User>): Promise<LoginResponse> {
+    const payload = { sub: user?.id, username: user?.username };
     return {
       username: user?.username,
       id: user?.id,
       email: user?.email,
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async getUserById(id: string): Promise<User> {
+    return this.userService.findById(id);
   }
 }

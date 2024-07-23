@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Args,
+  Context,
   Mutation,
   Parent,
   Query,
@@ -8,11 +9,12 @@ import {
   Resolver,
 } from '@nestjs/graphql';
 import { User } from '../user.entity';
-import { Inject } from '@nestjs/common';
+import { Inject, Req, UseGuards } from '@nestjs/common';
 import { Invoice } from '../../invoice/invoice.entity';
 import { UserService } from '../user.service';
-import { CreateUserDto } from '../dto/user.dto';
 import { InvoiceService } from 'src/invoice/invoice.service';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth-guard';
 
 @Resolver((of) => User)
 export class UserResolver {
@@ -35,5 +37,16 @@ export class UserResolver {
   async invoices(@Parent() customer): Promise<Invoice[]> {
     const { id } = customer;
     return this.invoiceService.findByCustomer(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => User)
+  async updateUser(
+    @Args('updateUserData') updateUserData: UpdateUserDto,
+    @Context() context,
+  ): Promise<User> {
+    const user = context.req.user;
+    const userId = user.id;
+    return await this.userService.updateUser(user.id, updateUserData);
   }
 }

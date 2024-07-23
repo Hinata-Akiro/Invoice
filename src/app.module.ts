@@ -15,7 +15,7 @@ import { AuthModule } from './auth/auth.module';
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
-      context: ({ req }) => ({ headers: req.headers }),
+      context: ({ req, res }) => ({ req, res }),
     }),
     TypeOrmModule.forRoot(TypeOrmConfig),
     UserModule,

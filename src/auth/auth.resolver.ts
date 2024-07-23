@@ -19,7 +19,7 @@ export class AuthResolver {
       loginUserInput.email,
       loginUserInput.password,
     );
-    return this.authService.login(user);
+    return this.authService.loginUser(user);
   }
 
   @Mutation((returns) => UserResponseDto)
