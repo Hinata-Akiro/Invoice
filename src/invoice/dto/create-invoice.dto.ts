@@ -29,7 +29,6 @@ class ItemDTO {
 
 @InputType()
 export class CreateInvoiceDTO {
-  @Field()
   @IsString()
   customer: string;
   @Field()

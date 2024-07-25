@@ -31,13 +31,13 @@ export class Invoice extends BaseTable {
   currency: Currency;
 
   @Field()
-  @Column()
+  @Column('float')
   taxRate: number;
   @Field()
-  @Column()
+  @Column('timestamptz')
   issueDate: string;
   @Field()
-  @Column()
+  @Column('timestamptz')
   dueDate: string;
   @Field()
   @Column('text')
@@ -55,7 +55,7 @@ export class Invoice extends BaseTable {
   @Column()
   @Field()
   taxAmount: number;
-  @Column()
+  @Column('float')
   @Field()
   subTotal: number;
   @Column()

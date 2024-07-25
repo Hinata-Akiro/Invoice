@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Query, Resolver, Args, Mutation } from '@nestjs/graphql';
+import { Query, Resolver, Args, Mutation, Context } from '@nestjs/graphql';
 import { Invoice } from './invoice.entity';
 import { UserService } from 'src/user/user.service';
 import { Inject, UseGuards } from '@nestjs/common';
 import { CreateInvoiceDTO } from './dto/create-invoice.dto';
 import { InvoiceService } from './invoice.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth-guard';
+import { InvoiceResponse } from './dto/invoice-response.dto';
 
 @Resolver(() => Invoice)
 export class InvoiceResolver {
@@ -35,10 +36,13 @@ export class InvoiceResolver {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => Invoice)
+  @Mutation(() => InvoiceResponse)
   async createInvoice(
     @Args('invoiceData') invoiceData: CreateInvoiceDTO,
-  ): Promise<Invoice> {
+    @Context() context,
+  ): Promise<InvoiceResponse> {
+    const user = context.req.user;
+    invoiceData['customer'] = user.id;
     return this.invoiceService.create(invoiceData);
   }
 }

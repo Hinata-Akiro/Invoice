@@ -25,14 +25,15 @@ export class InvoiceService {
     const taxAmount = subTotal * Number((invoice.taxRate / 100).toFixed(2));
     const total = subTotal + taxAmount;
     const outstandingBalance = total;
-    return this.invoiceRepository.save({
+    const createInvoice = this.invoiceRepository.create({
       ...invoice,
       customer,
-      subTotal,
-      taxAmount,
+      subTotal: subTotal.toFixed(0),
+      taxAmount: taxAmount.toFixed(0),
       total,
-      outstandingBalance,
-    } as any);
+      outstandingBalance: outstandingBalance.toFixed(0),
+    } as unknown as Invoice);
+    return await this.invoiceRepository.save(createInvoice);
   }
 
   findAll(): Promise<Invoice[]> {
